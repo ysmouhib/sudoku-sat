@@ -1,3 +1,4 @@
+import pytest
 from pysat.solvers import Solver
 
 from puzzles import (
@@ -114,3 +115,20 @@ def test_count_all_solutions():
 
 def test_count_solutions_of_unsolvable_puzzle_is_zero():
     assert count_solutions(UNSOLVABLE_4) == 0
+
+
+def test_rejects_grid_whose_size_is_not_a_square():
+    with pytest.raises(ValueError):
+        solve([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+
+
+def test_rejects_ragged_grid():
+    with pytest.raises(ValueError):
+        solve([[0, 0, 0, 0], [0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
+
+
+def test_rejects_out_of_range_value():
+    bad = [row[:] for row in WIKI_9]
+    bad[0][2] = 10
+    with pytest.raises(ValueError):
+        solve(bad)

@@ -23,6 +23,19 @@ def format_grid(grid):
     return "\n".join(lines)
 
 
+def check_grid(grid: list[list[int]]) -> None:
+    """Raise ValueError unless grid is an n x n grid of integers 0..n, with n = k*k."""
+    n = len(grid)
+    if n == 0 or isqrt(n) ** 2 != n:
+        raise ValueError(f"the grid size must be a perfect square (1, 4, 9, ...), got {n}")
+    for row in grid:
+        if len(row) != n:
+            raise ValueError(f"each row must have {n} columns, got {len(row)}")
+        for value in row:
+            if not isinstance(value, int) or not 0 <= value <= n:
+                raise ValueError(f"cell values must be integers from 0 to {n}, got {value}")
+
+
 def var(r: int, c: int, v: int, n: int) -> int:
     """Return the SAT variable meaning 'cell (r, c) contains value v'."""
     return r * n * n + c * n + v
@@ -100,6 +113,7 @@ def model_to_grid(model: list[int], n: int) -> list[list[int]]:
 
 def solve(grid: list[list[int]]) -> list[list[int]] | None:
     """Return a completed copy of grid, or None if it has no solution."""
+    check_grid(grid)
     n = len(grid)
     clauses = rule_clauses(n) + clue_clauses(grid)
     with Solver(name="g4", bootstrap_with=clauses) as solver:
@@ -110,6 +124,7 @@ def solve(grid: list[list[int]]) -> list[list[int]] | None:
 
 def count_solutions(grid: list[list[int]], limit: int | None = 2) -> int:
     """Count the solutions of grid, stopping at limit (None means no limit)."""
+    check_grid(grid)
     n = len(grid)
     count = 0
     clauses = rule_clauses(n) + clue_clauses(grid)
