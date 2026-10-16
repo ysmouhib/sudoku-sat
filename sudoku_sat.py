@@ -1,9 +1,12 @@
 """Solve sudoku puzzles with a SAT solver (PySAT)."""
 
+import time
 from itertools import combinations
 from math import isqrt
 
 from pysat.solvers import Solver
+
+from puzzles import EASY_4, HARD_9, MULTI_4, TRICKY_UNSOLVABLE_4, WIKI_9
 
 
 def format_grid(grid):
@@ -169,3 +172,33 @@ def is_valid_solution(puzzle, solution):
                 return False
 
     return True
+
+
+def main() -> None:
+    """Solve the example puzzles and print the results."""
+    examples = {
+        "Easy 4x4": EASY_4,
+        "Wikipedia 9x9": WIKI_9,
+        "Hardest 9x9": HARD_9,
+        "Several solutions": MULTI_4,
+        "Unsolvable": TRICKY_UNSOLVABLE_4,
+    }
+    for name, puzzle in examples.items():
+        print(f"== {name} ==")
+        print(format_grid(puzzle))
+        start = time.perf_counter()
+        solution = solve(puzzle)
+        elapsed = time.perf_counter() - start
+        if solution is None:
+            print("No solution.")
+        else:
+            print("Solution:")
+            print(format_grid(solution))
+            unique = count_solutions(puzzle) == 1
+            print("The solution is unique." if unique else "Several solutions exist.")
+        print(f"Solved in {elapsed * 1000:.1f} ms")
+        print()
+
+
+if __name__ == "__main__":
+    main()
