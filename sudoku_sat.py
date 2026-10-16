@@ -1,5 +1,6 @@
 """Solve sudoku puzzles with a SAT solver (PySAT)."""
 
+from itertools import combinations
 from math import isqrt
 
 
@@ -33,6 +34,14 @@ def decode(x: int, n: int) -> tuple[int, int, int]:
     c = x % n
     r = x // n
     return r, c, v
+
+
+def exactly_one(literals: list[int]) -> list[list[int]]:
+    """Return clauses saying that exactly one of the literals is true."""
+    clauses = [list(literals)]  # at least one of them is true
+    for a, b in combinations(literals, 2):
+        clauses.append([-a, -b])  # not both a and b
+    return clauses
 
 
 def is_valid_solution(puzzle, solution):

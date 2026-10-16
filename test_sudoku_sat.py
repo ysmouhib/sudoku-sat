@@ -1,5 +1,7 @@
+from pysat.solvers import Solver
+
 from puzzles import WIKI_9, WIKI_9_SOLUTION
-from sudoku_sat import decode, is_valid_solution, var
+from sudoku_sat import decode, exactly_one, is_valid_solution, var
 
 
 def test_known_solution_is_valid():
@@ -36,3 +38,15 @@ def test_var_examples():
     assert var(0, 0, 1, 9) == 1
     assert var(1, 0, 1, 9) == 82
     assert var(8, 8, 9, 9) == 729
+
+
+def test_exactly_one_clauses():
+    assert exactly_one([1, 2, 3]) == [[1, 2, 3], [-1, -2], [-1, -3], [-2, -3]]
+
+
+def test_exactly_one_allows_exactly_one_true_literal():
+    with Solver(name="g4", bootstrap_with=exactly_one([1, 2, 3, 4])) as solver:
+        models = list(solver.enum_models())
+    assert len(models) == 4
+    for model in models:
+        assert sum(1 for lit in model if lit > 0) == 1
