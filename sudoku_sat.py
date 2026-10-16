@@ -20,6 +20,21 @@ def format_grid(grid):
     return "\n".join(lines)
 
 
+def var(r: int, c: int, v: int, n: int) -> int:
+    """Return the SAT variable meaning 'cell (r, c) contains value v'."""
+    return r * n * n + c * n + v
+
+
+def decode(x: int, n: int) -> tuple[int, int, int]:
+    """Return the triple (r, c, v) encoded by the SAT variable x."""
+    x -= 1  
+    v = x % n + 1
+    x //= n
+    c = x % n
+    r = x // n
+    return r, c, v
+
+
 def is_valid_solution(puzzle, solution):
     """Return True if solution is a correctly completed version of puzzle."""
     n = len(solution)
