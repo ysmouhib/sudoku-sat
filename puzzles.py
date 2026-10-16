@@ -6,6 +6,29 @@ EASY_4 = [
     [0, 4, 0, 0],
     [0, 0, 0, 2],
 ]
+EASY_4_SOLUTION = [
+    [1, 3, 2, 4],
+    [4, 2, 3, 1],
+    [2, 4, 1, 3],
+    [3, 1, 4, 2],
+]
+
+# Two 1s in the first row: obviously impossible.
+UNSOLVABLE_4 = [
+    [1, 0, 0, 1],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+]
+
+# No visible conflict, but still impossible: row 0 needs 3 and 4 in its
+# top-right box, which already contains a 3.
+TRICKY_UNSOLVABLE_4 = [
+    [1, 2, 0, 0],
+    [0, 0, 3, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+]
 
 # The example puzzle from Wikipedia's "Sudoku" article, and its solution.
 WIKI_9 = [
@@ -29,4 +52,17 @@ WIKI_9_SOLUTION = [
     [9, 6, 1, 5, 3, 7, 2, 8, 4],
     [2, 8, 7, 4, 1, 9, 6, 3, 5],
     [3, 4, 5, 2, 8, 6, 1, 7, 9],
+]
+
+# Arto Inkala's puzzle, often called the "world's hardest sudoku".
+HARD_9 = [
+    [8, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 3, 6, 0, 0, 0, 0, 0],
+    [0, 7, 0, 0, 9, 0, 2, 0, 0],
+    [0, 5, 0, 0, 0, 7, 0, 0, 0],
+    [0, 0, 0, 0, 4, 5, 7, 0, 0],
+    [0, 0, 0, 1, 0, 0, 0, 3, 0],
+    [0, 0, 1, 0, 0, 0, 0, 6, 8],
+    [0, 0, 8, 5, 0, 0, 0, 1, 0],
+    [0, 9, 0, 0, 0, 0, 4, 0, 0],
 ]

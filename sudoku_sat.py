@@ -3,6 +3,8 @@
 from itertools import combinations
 from math import isqrt
 
+from pysat.solvers import Solver
+
 
 def format_grid(grid):
     """Return the grid as a printable string, with '.' for empty cells."""
@@ -73,6 +75,37 @@ def rule_clauses(n: int) -> list[list[int]]:
                 clauses += exactly_one(box)
 
     return clauses
+
+
+def clue_clauses(grid: list[list[int]]) -> list[list[int]]:
+    """Return one unit clause for each given digit of the grid."""
+    n = len(grid)
+    clauses = []
+    for r in range(n):
+        for c in range(n):
+            if grid[r][c] != 0:
+                clauses.append([var(r, c, grid[r][c], n)])
+    return clauses
+
+
+def model_to_grid(model: list[int], n: int) -> list[list[int]]:
+    """Build the grid described by a SAT model."""
+    grid = [[0] * n for _ in range(n)]
+    for lit in model:
+        if lit > 0:
+            r, c, v = decode(lit, n)
+            grid[r][c] = v
+    return grid
+
+
+def solve(grid: list[list[int]]) -> list[list[int]] | None:
+    """Return a completed copy of grid, or None if it has no solution."""
+    n = len(grid)
+    clauses = rule_clauses(n) + clue_clauses(grid)
+    with Solver(name="g4", bootstrap_with=clauses) as solver:
+        if not solver.solve():
+            return None
+        return model_to_grid(solver.get_model(), n)
 
 
 def is_valid_solution(puzzle, solution):

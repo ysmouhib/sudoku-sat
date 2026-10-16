@@ -1,8 +1,15 @@
 from pysat.solvers import Solver
 
-from puzzles import WIKI_9, WIKI_9_SOLUTION
-from sudoku_sat import decode, exactly_one, is_valid_solution, rule_clauses, var
-
+from puzzles import (
+    EASY_4,
+    EASY_4_SOLUTION,
+    HARD_9,
+    TRICKY_UNSOLVABLE_4,
+    UNSOLVABLE_4,
+    WIKI_9,
+    WIKI_9_SOLUTION,
+)
+from sudoku_sat import decode, exactly_one, is_valid_solution, rule_clauses, solve, var
 
 def test_known_solution_is_valid():
     assert is_valid_solution(WIKI_9, WIKI_9_SOLUTION)
@@ -61,3 +68,22 @@ def test_rules_allow_exactly_288_complete_4x4_grids():
     with Solver(name="g4", bootstrap_with=rule_clauses(4)) as solver:
         count = sum(1 for _ in solver.enum_models())
     assert count == 288
+
+
+def test_solves_easy_4x4():
+    assert solve(EASY_4) == EASY_4_SOLUTION
+
+
+def test_solves_wikipedia_puzzle():
+    assert solve(WIKI_9) == WIKI_9_SOLUTION
+
+
+def test_solves_hard_puzzle():
+    solution = solve(HARD_9)
+    assert solution is not None
+    assert is_valid_solution(HARD_9, solution)
+
+
+def test_unsolvable_puzzles_return_none():
+    assert solve(UNSOLVABLE_4) is None
+    assert solve(TRICKY_UNSOLVABLE_4) is None
