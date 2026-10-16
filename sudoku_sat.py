@@ -44,6 +44,37 @@ def exactly_one(literals: list[int]) -> list[list[int]]:
     return clauses
 
 
+def rule_clauses(n: int) -> list[list[int]]:
+    """Return the clauses expressing the sudoku rules for an n x n grid."""
+    k = isqrt(n)
+    values = range(1, n + 1)
+    clauses = []
+
+    # 1. Each cell contains exactly one value.
+    for r in range(n):
+        for c in range(n):
+            clauses += exactly_one([var(r, c, v, n) for v in values])
+
+    # 2. Each value appears exactly once in each row.
+    for r in range(n):
+        for v in values:
+            clauses += exactly_one([var(r, c, v, n) for c in range(n)])
+
+    # 3. Each value appears exactly once in each column.
+    for c in range(n):
+        for v in values:
+            clauses += exactly_one([var(r, c, v, n) for r in range(n)])
+
+    # 4. Each value appears exactly once in each box.
+    for br in range(0, n, k):
+        for bc in range(0, n, k):
+            for v in values:
+                box = [var(br + i, bc + j, v, n) for i in range(k) for j in range(k)]
+                clauses += exactly_one(box)
+
+    return clauses
+
+
 def is_valid_solution(puzzle, solution):
     """Return True if solution is a correctly completed version of puzzle."""
     n = len(solution)

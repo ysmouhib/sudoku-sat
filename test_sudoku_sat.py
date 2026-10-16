@@ -1,7 +1,7 @@
 from pysat.solvers import Solver
 
 from puzzles import WIKI_9, WIKI_9_SOLUTION
-from sudoku_sat import decode, exactly_one, is_valid_solution, var
+from sudoku_sat import decode, exactly_one, is_valid_solution, rule_clauses, var
 
 
 def test_known_solution_is_valid():
@@ -50,3 +50,14 @@ def test_exactly_one_allows_exactly_one_true_literal():
     assert len(models) == 4
     for model in models:
         assert sum(1 for lit in model if lit > 0) == 1
+
+
+def test_rule_clause_counts():
+    assert len(rule_clauses(4)) == 448     # 64 groups x (1 + 6) clauses
+    assert len(rule_clauses(9)) == 11988   # 324 groups x (1 + 36) clauses
+
+
+def test_rules_allow_exactly_288_complete_4x4_grids():
+    with Solver(name="g4", bootstrap_with=rule_clauses(4)) as solver:
+        count = sum(1 for _ in solver.enum_models())
+    assert count == 288
