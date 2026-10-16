@@ -29,6 +29,13 @@ TRICKY_UNSOLVABLE_4 = [
     [0, 0, 0, 0],
     [0, 0, 0, 0],
 ]
+# A single clue: many solutions (72, to be precise).
+MULTI_4 = [
+    [1, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+]
 
 # The example puzzle from Wikipedia's "Sudoku" article, and its solution.
 WIKI_9 = [

@@ -4,12 +4,22 @@ from puzzles import (
     EASY_4,
     EASY_4_SOLUTION,
     HARD_9,
+    MULTI_4,
     TRICKY_UNSOLVABLE_4,
     UNSOLVABLE_4,
     WIKI_9,
     WIKI_9_SOLUTION,
 )
-from sudoku_sat import decode, exactly_one, is_valid_solution, rule_clauses, solve, var
+from sudoku_sat import (
+    count_solutions,
+    decode,
+    exactly_one,
+    is_valid_solution,
+    rule_clauses,
+    solve,
+    var,
+)
+
 
 def test_known_solution_is_valid():
     assert is_valid_solution(WIKI_9, WIKI_9_SOLUTION)
@@ -87,3 +97,20 @@ def test_solves_hard_puzzle():
 def test_unsolvable_puzzles_return_none():
     assert solve(UNSOLVABLE_4) is None
     assert solve(TRICKY_UNSOLVABLE_4) is None
+
+
+def test_count_solutions_of_proper_puzzles_is_one():
+    assert count_solutions(EASY_4) == 1
+    assert count_solutions(WIKI_9) == 1
+
+
+def test_count_solutions_stops_at_limit():
+    assert count_solutions(MULTI_4) == 2
+
+
+def test_count_all_solutions():
+    assert count_solutions(MULTI_4, limit=None) == 72
+
+
+def test_count_solutions_of_unsolvable_puzzle_is_zero():
+    assert count_solutions(UNSOLVABLE_4) == 0

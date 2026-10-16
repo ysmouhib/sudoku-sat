@@ -108,6 +108,20 @@ def solve(grid: list[list[int]]) -> list[list[int]] | None:
         return model_to_grid(solver.get_model(), n)
 
 
+def count_solutions(grid: list[list[int]], limit: int | None = 2) -> int:
+    """Count the solutions of grid, stopping at limit (None means no limit)."""
+    n = len(grid)
+    count = 0
+    clauses = rule_clauses(n) + clue_clauses(grid)
+    with Solver(name="g4", bootstrap_with=clauses) as solver:
+        while (limit is None or count < limit) and solver.solve():
+            count += 1
+            solution = model_to_grid(solver.get_model(), n)
+            blocking = [-var(r, c, solution[r][c], n) for r in range(n) for c in range(n)]
+            solver.add_clause(blocking)
+    return count
+
+
 def is_valid_solution(puzzle, solution):
     """Return True if solution is a correctly completed version of puzzle."""
     n = len(solution)
