@@ -1,0 +1,5 @@
+# Prefer ready-made wheels: PySAT sometimes publishes a release's
+# source code before its Windows wheels.
+--prefer-binary
+python-sat
+pytest
